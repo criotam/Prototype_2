@@ -204,21 +204,16 @@ def predict():
     cap.release()
     cv2.destroyAllWindows()
     print(face_img.shape)
-    '''
-    test_image = image.load_img('/Users/Anuj/Desktop/Python codes/Dataset_faces/test_set1/1/Anuj401.jpg',target_size = (64,64))
-    test_image = image.img_to_array(test_image)
-    test_image = np.expand_dims(test_image, axis = 0)
-    # important! otherwise the predictions will be '0'
-    '''
     
+    face_img = image.img_to_array(face_img)
+    face_img = np.expand_dims(face_img, axis = 0)    
     face_img = face_img / 255
     
     # build the VGG16 network
     model = applications.VGG16(include_top=False, weights='imagenet')
-    print('Here1')
     # get the bottleneck prediction from the pre-trained VGG16 model
     bottleneck_prediction = model.predict(face_img)
-    '''
+    
     # build top model
     model = Sequential()
     model.add(Flatten(input_shape=bottleneck_prediction.shape[1:]))
@@ -227,7 +222,7 @@ def predict():
     model.add(Dense(num_classes, activation='softmax'))
 
     model.load_weights(top_model_weights_path)
-    '''
+    
     # use the bottleneck prediction on the top model to get the final
     # classification
     class_predicted = model.predict_classes(bottleneck_prediction)
@@ -241,16 +236,8 @@ def predict():
     label = inv_map[inID]
 
     # get the prediction label
-    print("Image ID: {}, Label: {}".format(inID, label))
+    print("Image ID: {}, Label: {}".format(inID, label))  
 
-    # display the predictions with the image
-    
-    cv2.putText(img, "Predicted: {}".format(label), (10, 30),
-               cv2.FONT_HERSHEY_PLAIN, 1.5, (43, 99, 255), 2)
-
-    cv2.imshow("Classified Image", face_img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
     cam = cv2.VideoCapture(1)
     cam.release()
     
